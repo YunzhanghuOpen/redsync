@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gomodule/redigo/redis"
+	"github.com/YunzhanghuOpen/redigo/redis"
 )
 
 // A Mutex is a distributed mutual exclusion lock.
