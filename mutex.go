@@ -5,9 +5,9 @@ import (
 	"encoding/base64"
 	"sync"
 	"time"
-	"fmt"
 
 	"github.com/YunzhanghuOpen/redigo/redis"
+	"github.com/YunzhanghuOpen/glog"
 )
 
 // A Mutex is a distributed mutual exclusion lock.
@@ -112,8 +112,8 @@ func (m *Mutex) acquire(pool Pool, value string) bool {
 	conn := pool.Get()
 	defer conn.Close()
 	reply, err := redis.String(conn.Do("SET", m.name, value, "NX", "PX", int(m.expiry/time.Millisecond)))
-	if err != nil {
-		fmt.Println("SET failed err=", err)
+	if err != nil || reply != "OK" {
+		glog.Errorf("SET failed err=%s reply=%s", err, reply)
 	}
 	return err == nil && reply == "OK"
 }
