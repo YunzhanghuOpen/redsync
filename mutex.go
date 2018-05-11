@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"sync"
 	"time"
+	"fmt"
 
 	"github.com/YunzhanghuOpen/redigo/redis"
 )
@@ -111,6 +112,9 @@ func (m *Mutex) acquire(pool Pool, value string) bool {
 	conn := pool.Get()
 	defer conn.Close()
 	reply, err := redis.String(conn.Do("SET", m.name, value, "NX", "PX", int(m.expiry/time.Millisecond)))
+	if err != nil {
+		fmt.Println("SET failed err=", err)
+	}
 	return err == nil && reply == "OK"
 }
 
